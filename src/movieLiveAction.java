@@ -22,14 +22,19 @@ class LiveActionFilm extends movieAbstract {
 
     public int getStarRating() {
         return starRating;
+    } 
+    public void setRating(int starRating) {
+        this.starRating = starRating;
+        this.comment =null;
+       
     }
 
-    public void setRating(int starRating,string comment) {
+    public void setRating(int starRating, String comment) {
         this.starRating = starRating;
         this.comment = comment;
     }
 
     public String getRating() {
-        return starRating + " stars out of 5 " +(comment!=null)?"Comment "+ comment : "";
+        return starRating + " stars out of 5 " + ((comment != null)?"Comment: "+ comment : "")   ;
     }
 }

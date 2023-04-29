@@ -1,10 +1,11 @@
+
 abstract class movieAbstract implements Film  {
     private String name;
     private String director;
     private int year;
-    private string comment;
+    public String comment;
 
-    public AbstractFilm(String name, String director, int year) {
+    public movieAbstract(String name, String director, int year) {
         this.name = name;
         this.director = director;
         this.year = year;

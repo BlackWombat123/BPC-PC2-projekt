@@ -5,25 +5,40 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 class FilmManager {
-    private Map<String, Film> films = new HashMap<>();
+    private Map<String, movieAbstract> films = new HashMap<>();
 
     // Add a new film
-    public void addFilm(Film film) {
+    public void addFilm(movieAbstract film) {
+
         films.put(film.getName(), film);
     }
+    public String movieType(String name){
 
+        movieAbstract film = films.get(name);
+        return ((film instanceof LiveActionFilm)? "Live-Action" : "Animated");
+
+    }
     // Edit a film
-    public void editFilm(String oldName, String newName, String director, int year, List<String> actorsOrAnimators) {
-        Film film = films.get(oldName);
+    public void editFilm(String oldName, String newName, String director, int year, List<String> actorsOrAnimators, int ageRating) {
+        movieAbstract film = films.get(oldName);
         if (film != null) {
+            if(newName !="")
             film.setName(newName);
+
+            if(director !="")
             film.setDirector(director);
+
+            if(year !=0)
             film.setYear(year);
-            if (film instanceof LiveActionFilm) {
+
+            if (film instanceof LiveActionFilm && !actorsOrAnimators.get(0).isEmpty()) {
                 ((LiveActionFilm) film).setActors(actorsOrAnimators);
-            } else if (film instanceof AnimatedFilm) {
+            } else if (film instanceof AnimatedFilm  && !actorsOrAnimators.get(0).isEmpty()) {
                 ((AnimatedFilm) film).setAnimators(actorsOrAnimators);
+              
             }
+            if(ageRating>=0)
+            ((AnimatedFilm) film).setAgeRating(ageRating);
         }
     }
 
@@ -33,19 +48,34 @@ class FilmManager {
     }
 
     // Add a rating to a film
-    public void addRating(String name, int rating) {
-        Film film = films.get(name);
+    public void addRating(String name, int rating,String comment) {
+        movieAbstract film = films.get(name);
+
         if (film instanceof LiveActionFilm) {
-            ((LiveActionFilm) film).setStarRating(rating);
+          
+            if(comment!=null){
+                ((LiveActionFilm) film).setRating(rating,comment);
+            }else{
+                ((LiveActionFilm) film).setRating(rating,comment);
+            }
+            
         } else if (film instanceof AnimatedFilm) {
-            ((AnimatedFilm) film).setScoreRating(rating);
+          
+            if(comment!=null){
+                ((AnimatedFilm) film).setRating(rating,comment);
+            }else{
+                ((AnimatedFilm) film).setRating(rating,comment);
+            }
         }
     }
 
     // Display all films
     public void displayFilms() {
-        for (Film film : films.values()) {
-            System.out.println(film.getName() + ", " + film.getDirector() + ", " + film.getYear() + ", " + film.getRating());
+        for (movieAbstract film : films.values()) {
+            List<String> actorsOrAnimators = (film instanceof LiveActionFilm) ? ((LiveActionFilm) film).getActors() : ((AnimatedFilm) film).getAnimators();
+            int age = (film instanceof AnimatedFilm) ? ((AnimatedFilm) film).getAgeRating(): 0;
+            System.out.println("Name: "+film.getName() + ", Director: " + film.getDirector() + ", Year of production: " + film.getYear() + ", Movie rating: "
+             + film.getRating() + ", Actors or Animators" + actorsOrAnimators + ((age > 0) ? ", Recommended age of viewer: " + age : ""));
         }
     }
 
@@ -85,3 +115,5 @@ class FilmManager {
         // Implement this method based on your requirements
     }
 }
+
+
