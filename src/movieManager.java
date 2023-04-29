@@ -42,6 +42,7 @@ class FilmManager {
         }
     }
 
+  
     // Delete a film
     public void deleteFilm(String name) {
         films.remove(name);
@@ -84,15 +85,45 @@ class FilmManager {
         return films.get(name);
     }
 
+    // Search for a film by name and then return information about it like in function search for actor
+    public Film searchForFilm(String name){
+        movieAbstract film = films.get(name);
+        List<String> actorsOrAnimators = (film instanceof LiveActionFilm) ? ((LiveActionFilm) film).getActors() : ((AnimatedFilm) film).getAnimators();
+        int age = (film instanceof AnimatedFilm) ? ((AnimatedFilm) film).getAgeRating(): 0;
+        System.out.println("Name: "+film.getName() + ", Director: " + film.getDirector() + ", Year of production: " + film.getYear() + ", Movie rating: "
+             + film.getRating() + ", Actors or Animators" + actorsOrAnimators + ((age > 0) ? ", Recommended age of viewer: " + age : ""));
+        return film;
+    }
+
+    //Search all the movies for specific actor and display all the movies hes been in
+    public void searchForActor(String name){
+        for (movieAbstract film : films.values()) {
+            List<String> actorsOrAnimators = (film instanceof LiveActionFilm) ? ((LiveActionFilm) film).getActors() : ((AnimatedFilm) film).getAnimators();
+            if(actorsOrAnimators.contains(name)){
+                System.out.println("Name: "+film.getName() + ", Director: " + film.getDirector() + ", Year of production: " + film.getYear() + ", Actors or Animators" + actorsOrAnimators);
+            }
+        }
+    }
+
     // Display actors or animators with multiple films
     public void displayMultiFilmActorsOrAnimators() {
         // Implement this method based on your requirements
+        Map<String, List<String>> actorsOrAnimatorsMovies = new HashMap<>();
+        for (movieAbstract film : films.values()) {
+            List<String> actorsOrAnimators = ((film instanceof LiveActionFilm) ? ((LiveActionFilm) film).getActors() : ((AnimatedFilm) film).getAnimators());
+            for (String actor : actorsOrAnimators){
+                actorsOrAnimatorsMovies.computeIfAbsent(actor, k -> new ArrayList<>()).add(film.getName());
+            }
+        }
+        for(String actor : actorsOrAnimatorsMovies.keySet()){
+            if(actorsOrAnimatorsMovies.get(actor).size() > 1){
+                System.out.println(actor + " has been in the following movies: " + actorsOrAnimatorsMovies.get(actor));
+            }
+        }
+      
     }
 
-    // Display films with a specific actor or animator
-    public void displayFilmsWithActorOrAnimator(String actorOrAnimator) {
-        // Implement this method based on your requirements
-    }
+
 
     // Save a film to a file
     public void saveFilmToFile(String name) {

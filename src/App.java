@@ -18,7 +18,7 @@ public class App {
         filmManager.addFilm(liveActionFilm);
 
         // Add an AnimatedFilm
-        List<String> animators1 = Arrays.asList("Animator1", "Animator2");
+        List<String> animators1 = Arrays.asList("Animator1", "Animator2","Actor1");
         AnimatedFilm animatedFilm = new AnimatedFilm("Film2", "Director2", 2021, animators1, 10);
         filmManager.addFilm(animatedFilm);
 
@@ -30,8 +30,9 @@ public class App {
             System.out.println("4. Add Rating");
             System.out.println("5. Display Films");
             System.out.println("6. Search Film");
-            System.out.println("7. Display animators or actors that played in multiple movies");
-            System.out.println("8. Exit");
+            System.out.println("7. Search For actor or animator");
+            System.out.println("8. Display animators or actors that played in multiple movies");
+            System.out.println("9. Exit");
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
             scanner.nextLine(); // Consume the newline
@@ -151,16 +152,27 @@ public class App {
                     break;
                 case 6:
                     // Search Film
-                    // Implement the logic for searching a film
+                    System.out.println("Enter the name of the film:");
+                    String filmName1 = scanner.nextLine();
+                    filmManager.searchForFilm(filmName1);
                     break;
                 case 7:
+                    // Search Film
+                    System.out.println("Enter the name of the actor:");
+                    String name = scanner.nextLine();
+                    filmManager.searchForActor(name);
+                    break;
+                case 8:
+                    filmManager.displayMultiFilmActorsOrAnimators();
+                    break;
+                case 9:
                     // Exit
                     System.out.println("Goodbye!");
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
-        } while (choice != 7);
+        } while (choice != 9);
 
     }
 }
