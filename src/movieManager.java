@@ -188,6 +188,7 @@ class FilmManager {
     }
     //Write a function that will load a film from a file
     public void loadFilmFromFile(String name) {
+       
         File file = new File(name+".txt");
         if (!file.exists()) {
             System.out.println("File not found.");
@@ -253,22 +254,23 @@ class FilmManager {
            connection = DriverManager.getConnection("jdbc:sqlite:mydbmovies.db");
             // použití connection pro práci s databází
 
-            String insertSQL1 = "INSERT INTO movies3 (Name,Director,Year,Rating,Actors) VALUES (?, ?, ?, ?, ?)";
+            String insertSQL1 = "INSERT INTO moviesAction (Name,Director,Year,Rating,Actors) VALUES (?, ?, ?, ?, ?)";
             try (PreparedStatement prStmt = connection.prepareStatement(insertSQL1)) {
                 for (movieAbstract film : films.values()) {
                     List<String> actorsOrAnimators = (film instanceof LiveActionFilm) ? ((LiveActionFilm) film).getActors() : ((AnimatedFilm) film).getAnimators();
                    int age = (film instanceof AnimatedFilm) ? ((AnimatedFilm) film).getAgeRating(): 0;
-                   System.out.println("Name: "+film.getName() + ", Director: " + film.getDirector() + ", Year of production: " + film.getYear() + ", Movie rating: "
-                    + film.getRating() + ", Actors or Animators" + actorsOrAnimators + ((age > 0) ? ", Recommended age of viewer: " + age : ""));
 
             prStmt.setString(1, film.getName());
             prStmt.setString(2, film.getDirector());
             prStmt.setInt(3, film.getYear());
-            prStmt.setString(4, film.getRating());
-            prStmt.setString(5,"nevimjakdal" );
+            String actors=String.join(", ",actorsOrAnimators);
+            Rating[] ratingArray = film.getRating().toArray(new Rating[film.getRating().size()]);          
+            String ratingString = Arrays.toString(ratingArray);
+            prStmt.setString(4,ratingString);
+            prStmt.setString(5, actors);
             prStmt.executeUpdate();
                 }
-            System.out.println("New user been added into database!");
+            System.out.println("The movies have been added to the database!");
             } catch (SQLException e) {
               System.out.println("Did not work");
               // e.printStackTrace();
@@ -295,13 +297,27 @@ class FilmManager {
         try {
            connection = DriverManager.getConnection("jdbc:sqlite:mydbmovies.db");
             // použití connection pro práci s databází
+            movieAbstract film;
+
             try (Statement prStmt = connection.createStatement();
-            ResultSet rs = prStmt.executeQuery("SELECT * FROM movies3")) {
+            ResultSet rs = prStmt.executeQuery("SELECT * FROM moviesAction")) {
               while (rs.next()) {
-    
+
+
+                
                   System.out.println(rs.getString("Name") + ", "
-                     + rs.getString("Director") + ", " + rs.getInt("Year") + ", " + rs.getInt("Rating")+ ", " + rs.getString("Actors"));
+                     + rs.getString("Director") + ", " + rs.getInt("Year") + ", " + rs.getString("Rating")+ ", " + rs.getString("Actors"));
+
+                     String name=rs.getString("Name");
+                     String director = rs.getString("Director");
+                      int year = rs.getInt("Year");
+                    // String rating = rs.getString("Rating");
+                     String actor=rs.getString("Actors");
+                     List<String> actors = Arrays.asList(actor.split(","));
+                     film = new LiveActionFilm(name, director, year, actors);
                 }
+
+                System.out.println("The movies been loaded from the database!"); 
         } catch (SQLException e) {
           e.printStackTrace();
         }

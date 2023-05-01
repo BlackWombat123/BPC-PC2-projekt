@@ -13,6 +13,7 @@ public class App {
         Scanner scanner = new Scanner(System.in);
         FilmManager filmManager = new FilmManager();
         int choice;
+        filmManager.loadFilmsFromDatabase(); //loading films
         List<String> actors1 = Arrays.asList("Actor1", "Actor2","Animator1");
         LiveActionFilm liveActionFilm = new LiveActionFilm("Film1", "Director1", 2020, actors1);
         filmManager.addFilm(liveActionFilm);
@@ -30,8 +31,8 @@ public class App {
             System.out.println("8. Display animators or actors that played in multiple movies");
             System.out.println("9. Save to file");
             System.out.println("10. Load from file");
-            System.out.println("11. Save to DB");
-            System.out.println("12. Load from DB");
+            System.out.println("11. Load from DB");
+            System.out.println("12. Save to DB");
             System.out.println("13. Exit");
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
@@ -191,10 +192,8 @@ public class App {
                 case 11:
                 //filmManager.saveFilmsToDatabase();
                 filmManager.loadFilmsFromDatabase();
-
-
                     break;
-                    case 12:
+                case 12:
                    filmManager.saveFilmsToDatabase();
                    break;
                 case 13:
@@ -205,6 +204,6 @@ public class App {
                     System.out.println("Invalid choice. Please try again.");
             }
         } while (choice != 13);
-
+        filmManager.saveFilmsToDatabase(); //save films
     }
 }
