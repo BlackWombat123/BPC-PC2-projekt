@@ -8,7 +8,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 class FilmManager {
     private Map<String, movieAbstract> films = new HashMap<>();
@@ -69,7 +74,7 @@ class FilmManager {
                 film.addRating(score);
             }
         }else{
-            throw new IllegalArgumentException("Invalid rating score");
+            throw new IllegalArgumentException("Invalid rating score or movie not found");
         }
     }
 
@@ -240,14 +245,80 @@ class FilmManager {
     
     }
    
-    // Save all films to a SQL database
     public void saveFilmsToDatabase() {
-       
-    }
+        // Implement this method based on your requirements
+       // String insertUser = "INSERT INTO movies2 " + "(Name,Director,Year,Rating)" + "VALUES(?,?,?,?)";
+        Connection connection=null;
+        try {
+           connection = DriverManager.getConnection("jdbc:sqlite:mydbmovies.db");
+            // použití connection pro práci s databází
 
+            String insertSQL1 = "INSERT INTO movies3 (Name,Director,Year,Rating,Actors) VALUES (?, ?, ?, ?, ?)";
+            try (PreparedStatement prStmt = connection.prepareStatement(insertSQL1)) {
+                for (movieAbstract film : films.values()) {
+                    List<String> actorsOrAnimators = (film instanceof LiveActionFilm) ? ((LiveActionFilm) film).getActors() : ((AnimatedFilm) film).getAnimators();
+                   int age = (film instanceof AnimatedFilm) ? ((AnimatedFilm) film).getAgeRating(): 0;
+                   System.out.println("Name: "+film.getName() + ", Director: " + film.getDirector() + ", Year of production: " + film.getYear() + ", Movie rating: "
+                    + film.getRating() + ", Actors or Animators" + actorsOrAnimators + ((age > 0) ? ", Recommended age of viewer: " + age : ""));
+
+            prStmt.setString(1, film.getName());
+            prStmt.setString(2, film.getDirector());
+            prStmt.setInt(3, film.getYear());
+            prStmt.setString(4, film.getRating());
+            prStmt.setString(5,"nevimjakdal" );
+            prStmt.executeUpdate();
+                }
+            System.out.println("New user been added into database!");
+            } catch (SQLException e) {
+              System.out.println("Did not work");
+              // e.printStackTrace();
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error connecting to database");
+            e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    System.err.println("Error closing database connection");
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
     // Load all films from a SQL database
     public void loadFilmsFromDatabase() {
-       
+        // Implement this method based on your requirements
+        Connection connection=null;
+        try {
+           connection = DriverManager.getConnection("jdbc:sqlite:mydbmovies.db");
+            // použití connection pro práci s databází
+            try (Statement prStmt = connection.createStatement();
+            ResultSet rs = prStmt.executeQuery("SELECT * FROM movies3")) {
+              while (rs.next()) {
+    
+                  System.out.println(rs.getString("Name") + ", "
+                     + rs.getString("Director") + ", " + rs.getInt("Year") + ", " + rs.getInt("Rating")+ ", " + rs.getString("Actors"));
+                }
+        } catch (SQLException e) {
+          e.printStackTrace();
+        }
+        } catch (SQLException e) {
+            System.err.println("Error connecting to database");
+            e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    System.err.println("Error closing database connection");
+                    e.printStackTrace();
+                }
+            }
+        }
+
     }
 }
 

@@ -30,7 +30,9 @@ public class App {
             System.out.println("8. Display animators or actors that played in multiple movies");
             System.out.println("9. Save to file");
             System.out.println("10. Load from file");
-            System.out.println("11. Exit");
+            System.out.println("11. Save to DB");
+            System.out.println("12. Load from DB");
+            System.out.println("13. Exit");
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
             scanner.nextLine(); // Consume the newline
@@ -186,15 +188,23 @@ public class App {
                     filmName = scanner.nextLine();
                     filmManager.loadFilmFromFile(filmName);
                 break;
-              
                 case 11:
+                //filmManager.saveFilmsToDatabase();
+                filmManager.loadFilmsFromDatabase();
+
+
+                    break;
+                    case 12:
+                   filmManager.saveFilmsToDatabase();
+                   break;
+                case 13:
                     // Exit
                     System.out.println("Goodbye!");
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
-        } while (choice != 11);
+        } while (choice != 13);
 
     }
 }
