@@ -17,10 +17,6 @@ public class App {
         LiveActionFilm liveActionFilm = new LiveActionFilm("Film1", "Director1", 2020, actors1);
         filmManager.addFilm(liveActionFilm);
 
-        // Add an AnimatedFilm
-        List<String> animators1 = Arrays.asList("Animator1", "Animator2","Actor1");
-        AnimatedFilm animatedFilm = new AnimatedFilm("Film2", "Director2", 2021, animators1, 10);
-        filmManager.addFilm(animatedFilm);
 
         do {
             System.out.println("\nMenu:");
@@ -32,7 +28,9 @@ public class App {
             System.out.println("6. Search Film");
             System.out.println("7. Search For actor or animator");
             System.out.println("8. Display animators or actors that played in multiple movies");
-            System.out.println("9. Exit");
+            System.out.println("9. Save to file");
+            System.out.println("10. Load from file");
+            System.out.println("11. Exit");
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
             scanner.nextLine(); // Consume the newline
@@ -126,12 +124,13 @@ public class App {
                     filmManager.deleteFilm(name);
                     System.out.println("Film deleted successfully.");
                   
-                } catch (Exception e) {
+                } catch (NullPointerException e) {
                     System.out.println("Error deleting film: " + e.getMessage());
                 }
                     break;
                     
                 case 4:
+                try{
                     System.out.println("Enter the name of the film:");
                     String filmName = scanner.nextLine();
 
@@ -143,6 +142,9 @@ public class App {
                     String comment = scanner.nextLine();
 
                     filmManager.addRating(filmName, ratingValue,comment);
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Error adding rating: " + e.getMessage());
+                }
                     // Add Rating
                     // Implement the logic for adding a rating
                     break;
@@ -152,9 +154,14 @@ public class App {
                     break;
                 case 6:
                     // Search Film
-                    System.out.println("Enter the name of the film:");
-                    String filmName1 = scanner.nextLine();
-                    filmManager.searchForFilm(filmName1);
+                    try{
+                        System.out.println("Enter the name of the film:");
+                        String filmName1 = scanner.nextLine();
+                        filmManager.searchForFilm(filmName1);
+                    }
+                     catch (NullPointerException e) {
+                        System.out.println("Error finding film: " + e.getMessage());
+                    }
                     break;
                 case 7:
                     // Search Film
@@ -166,13 +173,28 @@ public class App {
                     filmManager.displayMultiFilmActorsOrAnimators();
                     break;
                 case 9:
+                //save file
+    
+                    System.out.println("Enter the name of the film:");
+                    String filmName = scanner.nextLine();
+                    filmManager.saveFilmToFile(filmName);
+              
+                    break;
+                case 10:
+                //load file
+                    System.out.println("Enter the name of the film:");
+                    filmName = scanner.nextLine();
+                    filmManager.loadFilmFromFile(filmName);
+                break;
+              
+                case 11:
                     // Exit
                     System.out.println("Goodbye!");
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
-        } while (choice != 9);
+        } while (choice != 11);
 
     }
 }

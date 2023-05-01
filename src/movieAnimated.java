@@ -7,7 +7,6 @@ import java.util.ArrayList;
 class AnimatedFilm extends movieAbstract {
     private List<String> animators;
     private int ageRating;
-    private int scoreRating;
 
     public AnimatedFilm(String name, String director, int year, List<String> animators, int ageRating) {
         super(name, director, year);
@@ -31,22 +30,5 @@ class AnimatedFilm extends movieAbstract {
         this.ageRating = ageRating;
     }
 
-    public int getScoreRating() {
-        return scoreRating;
-    }
-    
 
-    public void setRating(int scoreRating) {
-        this.scoreRating = scoreRating;
-        this.comment =null;
-       
-    }
-    public void setRating(int scoreRating, String comment) {
-        this.scoreRating = scoreRating;
-        this.comment = comment;
-    }
-
-    public String getRating() {
-        return scoreRating + "/10 " + ((comment != null)?"Comment: " + comment : "");
-    }
 }

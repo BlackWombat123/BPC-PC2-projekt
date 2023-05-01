@@ -1,0 +1,7 @@
+name:Film1
+director:Director1
+year:2020
+type:LiveActionFilm
+actors:Actor1,Actor2,Animator1
+rating:4:asd
+rating:2:

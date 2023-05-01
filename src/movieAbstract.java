@@ -1,16 +1,22 @@
 
+import java.util.List;
+import java.util.ArrayList;
+
 abstract class movieAbstract implements Film  {
     private String name;
     private String director;
     private int year;
-    public String comment;
+    private List<Rating> ratings;
+
 
     public movieAbstract(String name, String director, int year) {
         this.name = name;
         this.director = director;
         this.year = year;
+        this.ratings = new ArrayList<>();
     }
 
+   
     public String getName() {
         return name;
     }
@@ -34,5 +40,18 @@ abstract class movieAbstract implements Film  {
     public void setYear(int year) {
         this.year = year;
     }
+
+    public void addRating(int score) {
+        ratings.add(new Rating(score));
+    }
+    
+    public void addRating(int score, String comment) {
+        ratings.add(new Rating(score, comment));
+    }
+
+    public List<Rating> getRating() {
+        return ratings;
+    }
+   
     
 }

@@ -1,0 +1,6 @@
+name:Film2
+director:Director5
+year:2020
+type:AnimatedFilm
+animators:Actor4,Actor2,Animator1
+ageRating:15
